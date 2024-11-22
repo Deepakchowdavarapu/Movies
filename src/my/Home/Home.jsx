@@ -9,11 +9,11 @@ const DEFAULT_MOVIES = [
     'ragnarok'
 ];
 
-export default function Home(){
-    const [value, setValue] = React.useState("") 
-    const [modal, setModal] = React.useState(false)
-    const [movies, setMovies] = React.useState([])
-    const [modalContent, setModalContent] = React.useState("")
+export default function Home() {
+    const [value, setValue] = React.useState("");
+    const [modal, setModal] = React.useState(false);
+    const [movies, setMovies] = React.useState([]);
+    const [modalContent, setModalContent] = React.useState("");
 
     useEffect(() => {
         const fetchDefaultMovies = async () => {
@@ -37,25 +37,25 @@ export default function Home(){
     }, []);
 
     const handleClick = () => {
-        if(value){
+        if (value) {
             axios.get(`https://www.omdbapi.com/?apikey=a2526df0&s=${value}`)
-            .then((res)=>{
-                if(res.data.Search){
-                    setMovies(res.data.Search)
+            .then((res) => {
+                if (res.data.Search) {
+                    setMovies(res.data.Search);
                 } else {
-                    setModal(true)
-                    setModalContent(["No Movies Found", "", "No results", "Try another search", ""])
+                    setModal(true);
+                    setModalContent(["No Movies Found", "", "No results", "Try another search", ""]);
                 }
             })
-            .catch((err)=>{
-                setModal(true)
-                setModalContent(["Search Error", "", "Error", "Please try again", ""])
-                console.log(err)
-            })
+            .catch((err) => {
+                setModal(true);
+                setModalContent(["Search Error", "", "Error", "Please try again", ""]);
+                console.log(err);
+            });
         } else {
-            console.log({err:`error`})            
+            // console.log({ err: [`error`](/c:/Users/saide/.vscode/extensions/ms-vscode.vscode-typescript-next-5.8.20241119/node_modules/typescript/lib/lib.dom.d.ts ) });
         }
-    }
+    };
 
     const handleContent = (index) => {
         setModalContent([
@@ -64,18 +64,18 @@ export default function Home(){
             movies[index].Type,
             movies[index].Year,
             movies[index].imdbID
-        ])
-    }
+        ]);
+    };
 
-    return(
-       <div className="home">
+    return (
+        <div className="home">
             <div className="search-space">
                 <label htmlFor="" className="search-box">
                     <input 
                         type="text" 
                         placeholder="Search movies..." 
                         value={value} 
-                        onChange={(e)=>setValue(e.target.value)} 
+                        onChange={(e) => setValue(e.target.value)} 
                         onKeyPress={(e) => {
                             if (e.key === 'Enter') {
                                 handleClick();
@@ -85,13 +85,13 @@ export default function Home(){
                 </label>
             </div>
             <div>
-                {movies.map((movie,index)=>(
+                {movies.map((movie, index) => (
                     <div className="holder" key={index}>
                         <div>{movie.Title}</div>
                         <img 
                             src={movie.Poster} 
                             alt="poster"  
-                            onClick={()=>[setModal(true),handleContent(index)]}
+                            onClick={() => [setModal(true), handleContent(index)]}
                         />
                     </div>
                 ))}
@@ -105,10 +105,15 @@ export default function Home(){
                         <p>Type: {modalContent[2]}</p>
                         <p>Year: {modalContent[3]}</p>
                         {modalContent[4] && <p>IMDB: {modalContent[4]}</p>}
-                        <button onClick={()=>setModal(false)}>Close</button>
+                        <button onClick={() => setModal(false)}>Close</button>
+                        {modalContent[4] && (
+                            <button onClick={() => window.open(`https://www.imdb.com/title/${modalContent[4]}`, '_blank')}>
+                                View on IMDb
+                            </button>
+                        )}
                     </div>
                </div>
             }
        </div>
-    )
+    );
 }
